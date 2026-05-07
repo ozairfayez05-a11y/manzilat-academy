@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manzilat Academy</title>
+
+<style>
+body { margin:0; font-family:'Segoe UI'; background:#f4f7fb; }
+
+nav {
+  display:flex;
+  justify-content:space-between;
+  padding:20px;
+  background:white;
+}
+
+nav h2 { color:#1abc9c; }
+
+nav a {
+  margin-left:15px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.hero {
+  height:90vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  text-align:center;
+  background:
+    linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+    url("https://images.unsplash.com/photo-1503676260728-1c00da094a0b");
+  background-size:cover;
+}
+
+.hero h1 { font-size:50px; }
+
+.card {
+  background:white;
+  max-width:500px;
+  margin:20px auto;
+  padding:20px;
+  border-radius:10px;
+}
+
+input, select, textarea {
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+}
+
+button {
+  padding:10px;
+  background:#1abc9c;
+  color:white;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.hidden { display:none; }
+
+.admin-box {
+  border:1px solid #ccc;
+  margin:10px;
+  padding:10px;
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <h2>Manzilat Academy</h2>
+  <div>
+    <a onclick="show('home')">Home</a>
+    <a onclick="show('login')">Login</a>
+    <a onclick="show('signup')">Apply</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="hero">
+  <div>
+    <h1>Study With Us</h1>
+    <p>Apply for professional courses</p>
+    <button onclick="show('signup')">Apply Now</button>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="card hidden">
+  <h3>Login</h3>
+  <input id="loginEmail" placeholder="Email">
+  <input id="loginPassword" type="password" placeholder="Password">
+  <button onclick="togglePass('loginPassword')">Show Password</button>
+  <button onclick="login()">Login</button>
+  <p id="loginMsg"></p>
+</div>
+
+<!-- SIGNUP -->
+<div id="signup" class="card hidden">
+  <h3>Create Account</h3>
+  <input id="signupEmail" placeholder="Email">
+  <input id="signupPassword" type="password" placeholder="Password">
+  <button onclick="togglePass('signupPassword')">Show Password</button>
+  <button onclick="signup()">Create Account</button>
+  <p id="signupMsg"></p>
+</div>
+
+<!-- APPLY -->
+<div id="applyForm" class="card hidden">
+  <h3>Apply for Course</h3>
+  <input id="fullName" placeholder="Full Name">
+  <input id="country" placeholder="Country">
+  <select id="courseSelect"></select>
+  <textarea id="motivation" placeholder="Why do you want this course?"></textarea>
+  <button onclick="submitApplication()">Submit</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="card hidden">
+
+<h3>Dashboard</h3>
+<p id="statusText"></p>
+
+<!-- ADMIN -->
+<div id="admin" class="hidden">
+
+<h4>Admin Dashboard</h4>
+
+<div id="applicationsList"></div>
+
+<h4>Add Course</h4>
+<input id="newCourseName" placeholder="Course name">
+<button onclick="addCourse()">Add</button>
+
+</div>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, updateDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDPUzQaS7tUATF3fWBwVP_GqBqkHY8T57g",
+  authDomain: "manzilat-academy.firebaseapp.com",
+  projectId: "manzilat-academy"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore();
+const auth = getAuth();
+
+window.togglePass = (id)=>{
+  let input = document.getElementById(id);
+  input.type = input.type === "password" ? "text" : "password";
+};
+
+window.show = (id)=>{
+  document.querySelectorAll('#home,#login,#signup,#dashboard,#applyForm')
+    .forEach(e=>e.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+
+  if(id==="applyForm") loadCourses();
+};
+
+window.signup = async ()=>{
+  try{
+    const userCred = await createUserWithEmailAndPassword(auth, signupEmail.value, signupPassword.value);
+
+    await sendEmailVerification(userCred.user);
+
+    await setDoc(doc(db,"users",userCred.user.uid),{role:"user"});
+
+    signupMsg.textContent="Verify your email first!";
+  }catch(e){ signupMsg.textContent=e.message; }
+};
+
+window.login = async ()=>{
+  try{
+    await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+  }catch(e){ loginMsg.textContent=e.message; }
+};
+
+onAuthStateChanged(auth, async user=>{
+  if(user){
+
+    if(!user.emailVerified){
+      alert("Verify email first!");
+      await signOut(auth);
+      return;
+    }
+
+    show("dashboard");
+
+    const userDoc = await getDoc(doc(db,"users",user.uid));
+
+    if(userDoc.exists() && userDoc.data().role==="admin"){
+      admin.classList.remove("hidden");
+      loadApplications();
+    }
+
+    checkStatus(user.uid);
+
+  } else show("home");
+});
+
+async function loadCourses(){
+  const snap = await getDocs(collection(db,"courses"));
+  courseSelect.innerHTML="";
+  snap.forEach(doc=> courseSelect.innerHTML += `<option>${doc.data().name}</option>`);
+}
+
+window.submitApplication = async ()=>{
+  const user = auth.currentUser;
+
+  const snap = await getDocs(collection(db,"applications"));
+  let already=false;
+
+  snap.forEach(doc=>{
+    if(doc.data().uid===user.uid) already=true;
+  });
+
+  if(already){
+    alert("You already applied!");
+    return;
+  }
+
+  await addDoc(collection(db,"applications"),{
+    uid:user.uid,
+    name:fullName.value,
+    country:country.value,
+    course:courseSelect.value,
+    motivation:motivation.value,
+    status:"pending"
+  });
+
+  alert("Application submitted!");
+  show("dashboard");
+};
+
+async function checkStatus(uid){
+  const snap = await getDocs(collection(db,"applications"));
+  let found=false;
+
+  snap.forEach(doc=>{
+    let d=doc.data();
+    if(d.uid===uid){
+      statusText.textContent = `Course: ${d.course} | Status: ${d.status}`;
+      found=true;
+    }
+  });
+
+  if(!found) statusText.textContent="No application yet";
+}
+
+window.loadApplications = async ()=>{
+  const apps = await getDocs(collection(db,"applications"));
+  applicationsList.innerHTML="";
+
+  apps.forEach(docSnap=>{
+    let d=docSnap.data();
+
+    applicationsList.innerHTML += `
+      <div class="admin-box">
+        <b>${d.name}</b> (${d.country})<br>
+        Course: ${d.course}<br>
+        Status: ${d.status}<br>
+
+        <button onclick="approve('${docSnap.id}')">Approve</button>
+        <button onclick="reject('${docSnap.id}')">Reject</button>
+      </div>
+    `;
+  });
+};
+
+window.approve = async id=>{
+  await updateDoc(doc(db,"applications",id),{status:"approved"});
+  loadApplications();
+};
+
+window.reject = async id=>{
+  await updateDoc(doc(db,"applications",id),{status:"rejected"});
+  loadApplications();
+};
+
+window.addCourse = async ()=>{
+  await addDoc(collection(db,"courses"),{name:newCourseName.value});
+};
+
+window.logout = ()=>signOut(auth);
+</script>
+
+</body>
+</html>
