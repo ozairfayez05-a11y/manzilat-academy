@@ -1,0 +1,613 @@
+# Professional Manzilat Academy Advertisement Website
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manzilat Academy</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:#f4f7fb;
+  color:#0f172a;
+}
+
+/* HEADER */
+
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index:1000;
+  background:rgba(15,23,42,0.95);
+  backdrop-filter:blur(10px);
+  box-shadow:0 2px 20px rgba(0,0,0,0.2);
+}
+
+.navbar{
+  width:90%;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 0;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.logo img{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid white;
+}
+
+.logo h1{
+  color:white;
+  font-size:28px;
+}
+
+nav{
+  display:flex;
+  gap:30px;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  font-weight:500;
+  transition:0.3s;
+}
+
+nav a:hover{
+  color:#38bdf8;
+}
+
+/* HERO */
+
+.hero{
+  min-height:100vh;
+  background:
+  linear-gradient(rgba(2,6,23,0.8),rgba(2,6,23,0.85)),
+  url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f');
+
+  background-size:cover;
+  background-position:center;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:white;
+  padding:120px 20px 50px;
+}
+
+.hero-content{
+  max-width:900px;
+}
+
+.hero-logo{
+  width:140px;
+  margin-bottom:30px;
+  border-radius:50%;
+  border:5px solid white;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+.hero h2{
+  font-size:70px;
+  margin-bottom:20px;
+  line-height:1.2;
+}
+
+.hero p{
+  font-size:22px;
+  line-height:1.8;
+  opacity:0.95;
+}
+
+.hero-buttons{
+  margin-top:40px;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+.hero button{
+  padding:16px 35px;
+  border:none;
+  border-radius:50px;
+  font-size:17px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btn-primary{
+  background:#2563eb;
+  color:white;
+}
+
+.btn-primary:hover{
+  background:#1d4ed8;
+  transform:translateY(-5px);
+}
+
+.btn-secondary{
+  background:white;
+  color:#0f172a;
+}
+
+.btn-secondary:hover{
+  transform:translateY(-5px);
+}
+
+/* SECTION */
+
+.section{
+  width:90%;
+  margin:auto;
+  padding:100px 0;
+}
+
+.section-title{
+  text-align:center;
+  margin-bottom:70px;
+}
+
+.section-title h2{
+  font-size:48px;
+  color:#0f172a;
+  margin-bottom:15px;
+}
+
+.section-title p{
+  color:#64748b;
+  font-size:18px;
+}
+
+/* SUBJECTS */
+
+.subject-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:30px;
+}
+
+.subject-card{
+  background:white;
+  border-radius:25px;
+  padding:35px;
+  box-shadow:0 15px 35px rgba(0,0,0,0.08);
+  transition:0.4s;
+  position:relative;
+  overflow:hidden;
+}
+
+.subject-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:6px;
+  background:#2563eb;
+}
+
+.subject-card:hover{
+  transform:translateY(-10px);
+}
+
+.subject-icon{
+  width:70px;
+  height:70px;
+  border-radius:20px;
+  background:#eff6ff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:35px;
+  margin-bottom:20px;
+}
+
+.subject-card h3{
+  font-size:30px;
+  margin-bottom:15px;
+}
+
+.subject-card p{
+  color:#64748b;
+  line-height:1.9;
+  margin-bottom:20px;
+}
+
+.subject-card button{
+  padding:12px 25px;
+  border:none;
+  border-radius:10px;
+  background:#0f172a;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.details{
+  display:none;
+  margin-top:20px;
+  border-top:1px solid #e2e8f0;
+  padding-top:20px;
+}
+
+.details p{
+  margin-bottom:10px;
+}
+
+/* ABOUT */
+
+.about{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:50px;
+  align-items:center;
+}
+
+.about img{
+  width:100%;
+  border-radius:25px;
+  box-shadow:0 15px 35px rgba(0,0,0,0.15);
+}
+
+.about-text h3{
+  font-size:45px;
+  margin-bottom:25px;
+}
+
+.about-text p{
+  color:#475569;
+  line-height:2;
+  font-size:18px;
+  margin-bottom:20px;
+}
+
+/* CONTACT */
+
+.contact-box{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  border-radius:30px;
+  padding:60px;
+  text-align:center;
+  box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+
+.contact-box h3{
+  font-size:45px;
+  margin-bottom:25px;
+}
+
+.contact-box p{
+  font-size:22px;
+  margin:15px 0;
+}
+
+/* FOOTER */
+
+footer{
+  background:#020617;
+  color:white;
+  text-align:center;
+  padding:30px;
+  margin-top:80px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .navbar{
+    flex-direction:column;
+    gap:20px;
+  }
+
+  nav{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .hero h2{
+    font-size:42px;
+  }
+
+  .hero p{
+    font-size:18px;
+  }
+
+  .section-title h2{
+    font-size:36px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+<div class="navbar">
+
+<div class="logo">
+
+<!-- PUT YOUR LOGO IMAGE -->
+<img src="logo.png" alt="Manzilat Academy Logo">
+
+<h1>Manzilat Academy</h1>
+
+</div>
+
+<nav>
+<a href="#home">Home</a>
+<a href="#subjects">Subjects</a>
+<a href="#about">About</a>
+<a href="#contact">Contact</a>
+</nav>
+
+</div>
+
+</header>
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+
+<div class="hero-content">
+
+<img src="logo.png" class="hero-logo">
+
+<h2>Professional Education For A Better Future</h2>
+
+<p>
+Manzilat Academy helps students build knowledge, improve skills, and achieve academic success through modern education and experienced teachers.
+</p>
+
+<div class="hero-buttons">
+
+<button class="btn-primary" onclick="document.getElementById('subjects').scrollIntoView()">
+Explore Subjects
+</button>
+
+<button class="btn-secondary" onclick="document.getElementById('contact').scrollIntoView()">
+Contact Us
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- SUBJECTS -->
+
+<section class="section" id="subjects">
+
+<div class="section-title">
+<h2>Our Subjects</h2>
+<p>Professional learning programs for students</p>
+</div>
+
+<div class="subject-grid">
+
+<!-- ENGLISH -->
+
+<div class="subject-card">
+
+<div class="subject-icon">📘</div>
+
+<h3>English</h3>
+
+<p>
+Improve speaking, grammar, communication, and writing skills.
+</p>
+
+<button onclick="toggleDetails('english')">
+Read More
+</button>
+
+<div class="details" id="english">
+
+<p>✔ English Grammar</p>
+<p>✔ Speaking Practice</p>
+<p>✔ Writing Skills</p>
+<p>✔ Communication Training</p>
+
+</div>
+
+</div>
+
+<!-- COMPUTER -->
+
+<div class="subject-card">
+
+<div class="subject-icon">💻</div>
+
+<h3>Computer</h3>
+
+<p>
+Learn computer basics, internet skills, and modern technology.
+</p>
+
+<button onclick="toggleDetails('computer')">
+Read More
+</button>
+
+<div class="details" id="computer">
+
+<p>✔ MS Office</p>
+<p>✔ Computer Basics</p>
+<p>✔ Internet Skills</p>
+<p>✔ Programming Introduction</p>
+
+</div>
+
+</div>
+
+<!-- MATH -->
+
+<div class="subject-card">
+
+<div class="subject-icon">📐</div>
+
+<h3>Mathematics</h3>
+
+<p>
+Master mathematics with easy and professional teaching methods.
+</p>
+
+<button onclick="toggleDetails('math')">
+Read More
+</button>
+
+<div class="details" id="math">
+
+<p>✔ Algebra</p>
+<p>✔ Problem Solving</p>
+<p>✔ Exam Preparation</p>
+<p>✔ Easy Learning Methods</p>
+
+</div>
+
+</div>
+
+<!-- ISLAMIC -->
+
+<div class="subject-card">
+
+<div class="subject-icon">☪️</div>
+
+<h3>Islamic Studies</h3>
+
+<p>
+Learn important Islamic teachings and educational subjects.
+</p>
+
+<button onclick="toggleDetails('islamic')">
+Read More
+</button>
+
+<div class="details" id="islamic">
+
+<p>✔ Quran Studies</p>
+<p>✔ Islamic Ethics</p>
+<p>✔ Religious Education</p>
+<p>✔ Islamic Knowledge</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ABOUT -->
+
+<section class="section" id="about">
+
+<div class="about">
+
+<div>
+<img src="manzilat_pic.png">
+</div>
+
+<div class="about-text">
+
+<h3>About Manzilat Academy</h3>
+
+<p>
+Manzilat Academy is dedicated to helping students achieve academic success through modern education, professional teaching, and a supportive learning environment.
+</p>
+
+<p>
+We focus on improving students’ knowledge, confidence, communication skills, and future opportunities.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CONTACT -->
+
+<section class="section" id="contact">
+
+<div class="contact-box">
+
+<h3>Contact Us</h3>
+
+<p>📞 +93787941121</p>
+<p>📞 +93773403422</p>
+
+<p>📧 Email</p>
+
+<p>📍 Afghanistan</p>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>
+© 2026 Manzilat Academy — All Rights Reserved
+</p>
+
+</footer>
+
+<script>
+
+function toggleDetails(id){
+
+  let box = document.getElementById(id);
+
+  if(box.style.display === "block"){
+    box.style.display = "none";
+  }else{
+    box.style.display = "block";
+  }
+
+}
+
+</script>
+
+</body>
+</html>
